@@ -3,10 +3,12 @@ class Timer
 {
     var $tag; // To identify the Timer
     var $startTime;
-    var $endTime;
     var $wayPoints;
 
-    function Timer($tag)
+    /**
+     * Constructor
+     */
+    function __construct($tag)
     {
         $this->tag = $tag;
         $this->startTime = new PointInTime("START");
@@ -14,7 +16,9 @@ class Timer
     }
     
     /**
-     * 
+     * Add a new waypoint to our profiling
+     *
+     * @param $str String Name for the waypoint
      */
     function wayPoint($str = "")
     {
@@ -24,19 +28,32 @@ class Timer
         $this->wayPoints[] = new PointInTime($str);
     }
     
+    /**
+     * Finish up profiling and add a final Point.
+     */
     function finished()
     {
-        $this->endTime = new PointInTime("FINISHED");
-        $this->wayPoints[] = $this->endTime;
+        $this->wayPoint("FINISHED");
     }
     
+    /**
+     * Generate output which can be hidden in a webpage
+     *
+     * @return String
+     */
     function htmlReport()
     {
-        echo "<!--\n" . $this->stringReport() . "-->\n";
+        return "<!--\n" . $this->stringReport() . "-->\n";
     }
     
+    /**
+     * Generate output report
+     *
+     * @return String
+     */
     function stringReport()
     {
+        $report = "";
         $numWayPoints = count($this->wayPoints);
         for ($i = 1; $i < $numWayPoints; $i++) {
             $wp =& $this->wayPoints[$i];
@@ -47,6 +64,9 @@ class Timer
         return $report;
     }
     
+    /**
+     * Calculate the total time taken.
+     */
     function totalTime()
     {
         $numWayPoints = count($this->wayPoints);
